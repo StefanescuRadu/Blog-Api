@@ -1,14 +1,20 @@
 package com.blog.services.impl;
 
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.blog.entities.User;
+import com.blog.exceptions.*;
 import com.blog.payloads.UserDto;
 import com.blog.repositories.UserRepo;
 import com.blog.services.UserService;
 import com.blog.repositories.*;
+
+@Service
 public class UserServiceImpl implements UserService {
 
 	@Autowired
@@ -25,26 +31,45 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDto updateUser(UserDto user, Integer userId) {
-		// TODO Auto-generated method stub
-		return null;
+	public UserDto updateUser(UserDto userDto, Integer userId) {
+		
+		User user = this.userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User","id",userId));
+		
+		user.setName(userDto.getName());
+		user.setEmail(userDto.getEmail());
+		user.setPassword(userDto.getPassword());
+		user.setAbout(userDto.getAbout());
+		
+		User updatedUser = this.userRepo.save(user);
+		UserDto userToDto = this.userToDto(updatedUser);
+		
+		return userToDto;
 	}
 
 	@Override
 	public UserDto getUserById(Integer userId) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		User user = this.userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User", "id", userId));
+		
+		return this.userToDto(user);
 	}
-
+	
 	@Override
 	public List<UserDto> getAllUsers() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		List<User> users = this.userRepo.findAll();
+		
+		List<UserDto> usersDto = users.stream().map(user -> this.userToDto(user)).collect(Collectors.toList());
+		
+		return usersDto;
 	}
 
 	@Override
 	public void deleteUser(Integer userId) {
-		// TODO Auto-generated method stub
+		
+		User user = this.userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User", "id", userId));
+		
+		this.userRepo.delete(user);
 
 	}
 	
