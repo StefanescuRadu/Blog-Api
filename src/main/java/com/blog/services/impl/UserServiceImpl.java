@@ -1,7 +1,6 @@
 package com.blog.services.impl;
 
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -13,7 +12,6 @@ import com.blog.exceptions.*;
 import com.blog.payloads.UserDto;
 import com.blog.repositories.UserRepo;
 import com.blog.services.UserService;
-import com.blog.repositories.*;
 
 @Service
 public class UserServiceImpl implements UserService {
