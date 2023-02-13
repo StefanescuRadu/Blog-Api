@@ -24,6 +24,6 @@ public class Category {
 	@Column(name = "title", length = 100, nullable = false)
 	private String categoryTitle;
 	
-	@Column(name = "title")
+	@Column(name = "description")
 	private String categoryDescription;
 }
