@@ -8,6 +8,9 @@ import java.util.stream.Collectors;
 import org.hibernate.ResourceClosedException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.blog.entities.Category;
@@ -78,9 +81,14 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<PostDto> getAllPost() {
+	public List<PostDto> getAllPost(Integer pageNumber, Integer pageSize) {
 		
-		List<Post> allPosts = this.postRepo.findAll();
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+		
+		Page<Post> pagePost = this.postRepo.findAll(pageable);
+		
+		List<Post> allPosts = pagePost.getContent();
+		
 		List<PostDto> allDtoPosts = allPosts.stream().map((post) -> this.modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
 		
 		return allDtoPosts;
