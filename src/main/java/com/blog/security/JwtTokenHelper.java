@@ -5,20 +5,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import javax.crypto.SecretKey;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;;
 
 @Component
 public class JwtTokenHelper {
 
 	public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 	
-	private String secret = "jwtTokenKey";
+	private SecretKey secret = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 	
 	public String getUsernameFromToken(String token) {
 		return getClaimFromToken(token, Claims::getSubject);
@@ -51,7 +54,7 @@ public class JwtTokenHelper {
 		
 		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date())
 				.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 100))
-				.signWith(SignatureAlgorithm.HS512, secret).compact();
+				.signWith(SignatureAlgorithm.HS512,secret).compact();
 	}
 	
 	public Boolean validateToken(String token, UserDetails userDetails) {
