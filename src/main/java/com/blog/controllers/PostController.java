@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.blog.entities.Post;
 import com.blog.payloads.ApiResponse;
+import com.blog.payloads.CategoryDto;
 import com.blog.payloads.PostDto;
 import com.blog.payloads.PostResponse;
 import com.blog.services.FileService;
@@ -61,6 +62,17 @@ public class PostController {
 		
 	}
 	
+	@GetMapping("/")
+	public ResponseEntity<List<PostDto>> getPosts(){
+			
+		
+		
+		return new ResponseEntity<List<PostDto>>(allPost,HttpStatus.OK);
+		
+	}
+	
+	
+	
 	@GetMapping("/category/{categoryId}/posts")
 	public ResponseEntity<List<PostDto>> getPostsByCategory(@PathVariable("categoryId") Integer categoryId){
 			
@@ -87,7 +99,7 @@ public class PostController {
 		PostDto postById = this.postService.getPostById(postId);
 		return new ResponseEntity<PostDto>(postById,HttpStatus.OK);
 	}
-	
+//	test andy 
 	@DeleteMapping("/posts/{postId}")
 	public ApiResponse deletePost(@PathVariable("postId") Integer postId){
 		
